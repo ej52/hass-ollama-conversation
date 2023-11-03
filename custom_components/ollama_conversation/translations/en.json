@@ -1,0 +1,33 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "base_url": "[%key:common::config_flow::data::url%]"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+            "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+            "invalid_url": "Invalid [%key:common::config_flow::data::url%]",
+            "unknown": "[%key:common::config_flow::error::unknown%]"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ollama configuration",
+                "data": {
+                    "prompt": "Prompt Template",
+                    "chat_model": "[%key:common::generic::model%]",
+                    "ctx_size": "Context window size",
+                    "max_tokens": "Maximum predict tokens",
+                    "temperature": "Temperature",
+                    "top_p": "Top P",
+                    "top_k": "Top K"
+                }
+            }
+        }
+    }
+}

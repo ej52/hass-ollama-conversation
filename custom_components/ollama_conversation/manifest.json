@@ -1,0 +1,16 @@
+{
+  "domain": "ollama_conversation",
+  "name": "Ollama Conversation",
+  "codeowners": [
+    "@ej52"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "conversation"
+  ],
+  "documentation": "https://github.com/ej52/hass-ollama-conversation",
+  "iot_class": "cloud_polling",
+  "integration_type": "service",
+  "issue_tracker": "https://github.com/ej52/hass-ollama-conversatio/issues",
+  "version": "0.1.0"
+}

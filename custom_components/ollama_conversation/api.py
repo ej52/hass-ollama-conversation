@@ -1,4 +1,4 @@
-"""Sample API Client."""
+"""Ollama API Client."""
 from __future__ import annotations
 
 import asyncio
@@ -8,50 +8,60 @@ import aiohttp
 import async_timeout
 
 
-class IntegrationBlueprintApiClientError(Exception):
+class OllamaApiClientError(Exception):
     """Exception to indicate a general API error."""
 
 
-class IntegrationBlueprintApiClientCommunicationError(
-    IntegrationBlueprintApiClientError
+class OllamaApiClientCommunicationError(
+    OllamaApiClientError
 ):
     """Exception to indicate a communication error."""
 
 
-class IntegrationBlueprintApiClientAuthenticationError(
-    IntegrationBlueprintApiClientError
+class OllamaApiClientAuthenticationError(
+    OllamaApiClientError
 ):
     """Exception to indicate an authentication error."""
 
 
-class IntegrationBlueprintApiClient:
+class OllamaApiClient:
     """Sample API Client."""
 
     def __init__(
         self,
-        username: str,
-        password: str,
+        base_url: str,
         session: aiohttp.ClientSession,
     ) -> None:
         """Sample API Client."""
-        self._username = username
-        self._password = password
+        if not base_url.endswith("/"):
+            base_url = f"{base_url}/"
+
+        self._base_url = base_url
         self._session = session
 
-    async def async_get_data(self) -> any:
-        """Get data from the API."""
+    async def async_get_heartbeat(self) -> any:
+        """Get heartbeat from the API."""
         return await self._api_wrapper(
-            method="get", url="https://jsonplaceholder.typicode.com/posts/1"
+            method="get", url=self._base_url, decode_json=False
         )
 
-    async def async_set_title(self, value: str) -> any:
-        """Get data from the API."""
+    async def async_get_models(self) -> any:
+        """Get models from the API."""
         return await self._api_wrapper(
-            method="patch",
-            url="https://jsonplaceholder.typicode.com/posts/1",
-            data={"title": value},
+            method="get",
+            url=f"{self._base_url}/api/tags",
             headers={"Content-type": "application/json; charset=UTF-8"},
         )
+
+    async def async_generate(self, data: dict | None = None,) -> any:
+        """Generate a completion from the API."""
+        return await self._api_wrapper(
+            method="post",
+            url=f"{self._base_url}/api/generate",
+            data=data,
+            headers={"Content-type": "application/json; charset=UTF-8"},
+        )
+
 
     async def _api_wrapper(
         self,
@@ -59,6 +69,7 @@ class IntegrationBlueprintApiClient:
         url: str,
         data: dict | None = None,
         headers: dict | None = None,
+        decode_json: bool = True,
     ) -> any:
         """Get information from the API."""
         try:
@@ -67,24 +78,28 @@ class IntegrationBlueprintApiClient:
                     method=method,
                     url=url,
                     headers=headers,
+                    raise_for_status=True,
                     json=data,
                 )
+
                 if response.status in (401, 403):
-                    raise IntegrationBlueprintApiClientAuthenticationError(
+                    raise OllamaApiClientAuthenticationError(
                         "Invalid credentials",
                     )
-                response.raise_for_status()
-                return await response.json()
+
+                if decode_json:
+                    return await response.json()
+                return await response.text()
 
         except asyncio.TimeoutError as exception:
-            raise IntegrationBlueprintApiClientCommunicationError(
+            raise OllamaApiClientCommunicationError(
                 "Timeout error fetching information",
             ) from exception
         except (aiohttp.ClientError, socket.gaierror) as exception:
-            raise IntegrationBlueprintApiClientCommunicationError(
+            raise OllamaApiClientCommunicationError(
                 "Error fetching information",
             ) from exception
         except Exception as exception:  # pylint: disable=broad-except
-            raise IntegrationBlueprintApiClientError(
+            raise OllamaApiClientError(
                 "Something really wrong happened!"
             ) from exception
