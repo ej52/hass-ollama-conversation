@@ -1,7 +1,6 @@
 """Adds config flow for Ollama."""
 from __future__ import annotations
 
-import logging
 import types
 from types import MappingProxyType
 from typing import Any
@@ -9,7 +8,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers import selector, config_validation as cv
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from homeassistant.helpers.selector import (
     NumberSelector,
