@@ -5,7 +5,7 @@ LOGGER: Logger = getLogger(__package__)
 
 NAME = "Ollama Conversation"
 DOMAIN = "ollama_conversation"
-VERSION = "0.1.7"
+VERSION = "0.1.8"
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 TIMEOUT = 60
 
