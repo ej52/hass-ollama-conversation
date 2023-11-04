@@ -7,6 +7,8 @@ import socket
 import aiohttp
 import async_timeout
 
+from .const TIMEOUT
+
 
 class OllamaApiClientError(Exception):
     """Exception to indicate a general API error."""
@@ -70,7 +72,7 @@ class OllamaApiClient:
     ) -> any:
         """Get information from the API."""
         try:
-            async with async_timeout.timeout(10):
+            async with async_timeout.timeout(60):
                 response = await self._session.request(
                     method=method,
                     url=url,
