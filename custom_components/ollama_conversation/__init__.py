@@ -69,7 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    conversation.async_set_agent(hass, entry, OllamaAgent(hass, entry))
+    conversation.async_set_agent(hass, entry, OllamaAgent(hass, entry, client))
     return True
 
 
