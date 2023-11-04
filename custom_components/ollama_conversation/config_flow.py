@@ -84,12 +84,8 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         errors = {}
         try:
-            # Cannot use cv.url validation in the schema itself, so
-            # apply extra validation here.
-            cv.url_no_path(user_input[CONF_BASE_URL])
-
             client = OllamaApiClient(
-                base_url=user_input[CONF_BASE_URL],
+                base_url=cv.url_no_path(user_input[CONF_BASE_URL]).rstrip("/"),
                 session=async_create_clientsession(self.hass),
             )
             await client.async_get_heartbeat()
@@ -132,12 +128,8 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
             return self.async_create_entry(title="Ollama Conversation", data=user_input)
 
         try:
-            # Cannot use cv.url validation in the schema itself, so
-            # apply extra validation here.
-            cv.url_no_path(self.config_entry.data[CONF_BASE_URL])
-
             client = OllamaApiClient(
-                base_url=self.config_entry.data[CONF_BASE_URL],
+                base_url=cv.url_no_path(self.config_entry.data[CONF_BASE_URL]).rstrip("/"),
                 session=async_create_clientsession(self.hass),
             )
             response = await client.async_get_models()
