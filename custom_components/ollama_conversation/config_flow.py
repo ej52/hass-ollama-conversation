@@ -131,7 +131,6 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(title="Ollama Conversation", data=user_input)
 
-        errors = {}
         try:
             # Cannot use cv.url validation in the schema itself, so
             # apply extra validation here.
@@ -142,21 +141,15 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
                 session=async_create_clientsession(self.hass),
             )
             response = await client.async_get_models()
-        except vol.Invalid:
-            errors["base"] = "invalid_url"
-        except OllamaApiClientAuthenticationError:
-            errors["base"] = "invalid_auth"
-        except OllamaApiClientCommunicationError:
-            errors["base"] = "cannot_connect"
+            models = response["models"]
         except OllamaApiClientError as exception:
             LOGGER.exception("Unexpected exception: %s", exception)
-            errors["base"] = "unknown"
+            models = []
 
-        schema = ollama_config_option_schema(self.config_entry.options, [model["name"] for model in response["models"]])
+        schema = ollama_config_option_schema(self.config_entry.options, [model["name"] for model in models])
         return self.async_show_form(
             step_id="init",
-            data_schema=vol.Schema(schema),
-            errors=errors
+            data_schema=vol.Schema(schema)
         )
 
 

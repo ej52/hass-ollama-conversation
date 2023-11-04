@@ -33,9 +33,6 @@ class OllamaApiClient:
         session: aiohttp.ClientSession,
     ) -> None:
         """Sample API Client."""
-        if not base_url.endswith("/"):
-            base_url = f"{base_url}/"
-
         self._base_url = base_url
         self._session = session
 
