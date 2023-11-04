@@ -39,13 +39,13 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 
 | Option                   | Description                                                                                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prompt Template          | The starting text for the AI language model to generate new text from. This text can include information<br> about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating. |
+| Prompt Template          | The starting text for the AI language model to generate new text from. This text can include information about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating. |
 | Completion Model         | The model used to generate response.                                                                                                                                                                                |
 | Context Size             | Sets the size of the context window used to generate the next token.                                                                                                                                                |
 | Maximum Tokens           | The maximum number of words or “tokens” that the AI model should generate in its completion of the prompt.                                                                                                          |
-| Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a <br>lower value (e.g. 0.5) will be more deterministic results.                                              |
-| Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers,<br> while a lower value (e.g. 10) will be more conservative.                                              |
-| Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5)<br> will generate more focused and conservative text.                                        |
+| Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a lower value (e.g. 0.5) will be more deterministic results.                                              |
+| Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                              |
+| Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                        |
 
 
 ## Contributions are welcome!
