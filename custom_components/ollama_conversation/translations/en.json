@@ -20,9 +20,9 @@
                 "title": "Ollama configuration",
                 "data": {
                     "prompt": "Prompt Template",
-                    "chat_model": "[%key:common::generic::model%]",
-                    "ctx_size": "Context window size",
-                    "max_tokens": "Maximum predict tokens",
+                    "chat_model": "Completion Model",
+                    "ctx_size": "Context Size",
+                    "max_tokens": "Maximum Tokens",
                     "temperature": "Temperature",
                     "top_p": "Top P",
                     "top_k": "Top K"

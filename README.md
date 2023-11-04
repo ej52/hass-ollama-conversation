@@ -1,47 +1,59 @@
-# Notice
+# Ollama Conversation
 
-The component and platforms in this repository are not meant to be used by a
-user, but as a "blueprint" that custom component developers can build
-upon, to make more awesome stuff.
+The Ollama integration adds a conversation agent powered by [Ollama][ollama] in Home Assistant.
 
-HAVE FUN! 😎
+This conversation agent is unable to control your house. The Ollama conversation agent can be used in automations, but not as a [sentence trigger][sentence-trigger]. It can only query information that has been provided by Home Assistant. To be able to answer questions about your house, Home Assistant will need to provide Ollama with the details of your house, which include areas, devices and their states.
 
-## Why?
+## Installation
 
-This is simple, by having custom_components look (README + structure) the same
-it is easier for developers to help each other and for users to start using them.
+To install the __Ollama Conversation__ integration to your Home Assistant instance, use this My button:
 
-If you are a developer and you want to add things to this "blueprint" that you think more
-developers will have use for, please open a PR to add it :)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ej52&repository=hass-ollama-conversation&category=integration)
 
-## What?
+#### Manual Insallation
+If the above My button doesn’t work, you can also perform the following steps manually:
 
-This repository contains multiple files, here is a overview:
+* Browse to your Home Assistant instance.
+* Go to HACS > Integrations > Explore & Download Repositories.
+* From the list, select Ollama Conversation.
+* In the bottom right corner, click the Download button.
+* Follow the instructions on screen to complete the installation.
 
-File | Purpose | Documentation
--- | -- | --
-`.devcontainer.json` | Used for development/testing with Visual Studio Code. | [Documentation](https://code.visualstudio.com/docs/remote/containers)
-`.github/ISSUE_TEMPLATE/*.yml` | Templates for the issue tracker | [Documentation](https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository)
-`.vscode/tasks.json` | Tasks for the devcontainer. | [Documentation](https://code.visualstudio.com/docs/editor/tasks)
-`custom_components/ollama_conversation/*` | Integration files, this is where everything happens. | [Documentation](https://developers.home-assistant.io/docs/creating_component_index)
-`CONTRIBUTING.md` | Guidelines on how to contribute. | [Documentation](https://help.github.com/en/github/building-a-strong-community/setting-guidelines-for-repository-contributors)
-`LICENSE` | The license file for the project. | [Documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
-`README.md` | The file you are reading now, should contain info about the integration, installation and configuration instructions. | [Documentation](https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)
-`requirements.txt` | Python packages used for development/lint/testing this integration. | [Documentation](https://pip.pypa.io/en/stable/user_guide/#requirements-files)
+#### Note:
+HACS does not "configure" the integration for you, You must add Ollama Conversation after installing via HACS.
 
-## How?
+* Browse to your Home Assistant instance.
+* Go to Settings > Devices & Services.
+* In the bottom right corner, select the Add Integration button.
+* From the list, select Ollama Conversation.
+* Follow the instructions on screen to complete the setup.
 
-1. Create a new repository in GitHub, using this repository as a template by clicking the "Use this template" button in the GitHub UI.
-1. Open your new repository in Visual Studio Code devcontainer (Preferably with the "`Dev Containers: Clone Repository in Named Container Volume...`" option).
-1. Rename all instances of the `ollama_conversation` to `custom_components/<your_integration_domain>` (e.g. `custom_components/awesome_integration`).
-1. Rename all instances of the `Ollama Conversation` to `<Your Integration Name>` (e.g. `Awesome Integration`).
-1. Run the `scripts/develop` to start HA and test out your new integration.
+## Options
+Options for Ollama Conversation can be set via the user interface, by taking the following steps:
 
-## Next steps
+* Browse to your Home Assistant instance.
+* Go to Settings > Devices & Services.
+* If multiple instances of Ollama Conversation are configured, choose the instance you want to configure.
+* Select the integration, then select __Configure__.
 
-These are some next steps you may want to look into:
-- Add tests to your integration, [`pytest-homeassistant-custom-component`](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) can help you get started.
-- Add brand images (logo/icon) to https://github.com/home-assistant/brands.
-- Create your first release.
-- Share your integration on the [Home Assistant Forum](https://community.home-assistant.io/).
-- Submit your integration to the [HACS](https://hacs.xyz/docs/publish/start).
+
+| Option                   | Description                                                                                                                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt Template          | The starting text for the AI language model to generate new text from. This text can include information<br> about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating. |
+| Completion Model         | The model used to generate response.                                                                                                                                                                                |
+| Context Size             | Sets the size of the context window used to generate the next token.                                                                                                                                                |
+| Maximum Tokens           | The maximum number of words or “tokens” that the AI model should generate in its completion of the prompt.                                                                                                          |
+| Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a <br>lower value (e.g. 0.5) will be more deterministic results.                                              |
+| Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers,<br> while a lower value (e.g. 10) will be more conservative.                                              |
+| Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5)<br> will generate more focused and conservative text.                                        |
+
+
+## Contributions are welcome!
+
+If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+
+***
+
+[ollama]: https://ollama.ai/
+[ollama-github]: https://github.com/jmorganca/ollama
+[sentence-trigger]: https://www.home-assistant.io/docs/automation/trigger/#sentence-trigger
