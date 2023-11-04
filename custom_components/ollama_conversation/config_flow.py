@@ -85,7 +85,7 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         try:
             client = OllamaApiClient(
-                base_url=cv.url_no_path(user_input[CONF_BASE_URL]).rstrip("/"),
+                base_url=cv.url_no_path(user_input[CONF_BASE_URL]),
                 session=async_create_clientsession(self.hass),
             )
             await client.async_get_heartbeat()
@@ -129,7 +129,7 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
 
         try:
             client = OllamaApiClient(
-                base_url=cv.url_no_path(self.config_entry.data[CONF_BASE_URL]).rstrip("/"),
+                base_url=cv.url_no_path(self.config_entry.data[CONF_BASE_URL]),
                 session=async_create_clientsession(self.hass),
             )
             response = await client.async_get_models()

@@ -33,7 +33,7 @@ class OllamaApiClient:
         session: aiohttp.ClientSession,
     ) -> None:
         """Sample API Client."""
-        self._base_url = base_url
+        self._base_url = base_url.rstrip("/")
         self._session = session
 
     async def async_get_heartbeat(self) -> any:
