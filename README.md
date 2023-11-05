@@ -14,9 +14,13 @@ To install the __Ollama Conversation__ integration to your Home Assistant instan
 If the above My button doesn’t work, you can also perform the following steps manually:
 
 * Browse to your Home Assistant instance.
-* Go to HACS > Integrations > Explore & Download Repositories.
+* Go to HACS > Integrations > Custom Repositories.
+* Add custom repository.
+  * Repository is `ej52/hass-ollama-conversation`.
+  * Category is `Integration`.
+* Click ___Explore & Download Repositories___.
 * From the list, select Ollama Conversation.
-* In the bottom right corner, click the Download button.
+* In the bottom right corner, click the ___Download___ button.
 * Follow the instructions on screen to complete the installation.
 
 #### Note:
@@ -24,7 +28,7 @@ HACS does not "configure" the integration for you, You must add Ollama Conversat
 
 * Browse to your Home Assistant instance.
 * Go to Settings > Devices & Services.
-* In the bottom right corner, select the Add Integration button.
+* In the bottom right corner, select the ___Add Integration___ button.
 * From the list, select Ollama Conversation.
 * Follow the instructions on screen to complete the setup.
 
@@ -34,7 +38,7 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 * Browse to your Home Assistant instance.
 * Go to Settings > Devices & Services.
 * If multiple instances of Ollama Conversation are configured, choose the instance you want to configure.
-* Select the integration, then select __Configure__.
+* Select the integration, then select ___Configure___.
 
 
 | Option                   | Description                                                                                                                                                                                                         |
