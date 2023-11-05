@@ -38,11 +38,12 @@ class OllamaApiClient:
         self._base_url = base_url.rstrip("/")
         self._session = session
 
-    async def async_get_heartbeat(self) -> any:
+    async def async_get_heartbeat(self) -> bool:
         """Get heartbeat from the API."""
-        return await self._api_wrapper(
+        response = await self._api_wrapper(
             method="get", url=self._base_url, decode_json=False
         )
+        return response == "Ollama is running"
 
     async def async_get_models(self) -> any:
         """Get models from the API."""

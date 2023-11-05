@@ -61,7 +61,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await coordinator.async_config_entry_first_refresh()
 
     try:
-        await client.async_get_heartbeat()
+        response = await client.async_get_heartbeat()
+        if not response:
+            raise OllamaApiClientError("Invalid Ollama server")
     except OllamaApiClientAuthenticationError as exception:
         raise ConfigEntryAuthFailed(exception) from exception
     except OllamaApiClientError as err:

@@ -88,7 +88,9 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 base_url=cv.url_no_path(user_input[CONF_BASE_URL]),
                 session=async_create_clientsession(self.hass),
             )
-            await client.async_get_heartbeat()
+            response = await client.async_get_heartbeat()
+            if not response:
+                raise vol.Invalid("Invalid Ollama server")
         except vol.Invalid:
             errors["base"] = "invalid_url"
         except OllamaApiClientAuthenticationError:
