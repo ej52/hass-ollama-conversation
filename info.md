@@ -31,3 +31,9 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 | Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a lower value (e.g. 0.5) will be more deterministic results.                                              |
 | Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                              |
 | Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                        |
+
+***
+
+[ollama]: https://ollama.ai/
+[ollama-github]: https://github.com/jmorganca/ollama
+[sentence-trigger]: https://www.home-assistant.io/docs/automation/trigger/#sentence-trigger
