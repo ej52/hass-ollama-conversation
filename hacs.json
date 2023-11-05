@@ -2,6 +2,6 @@
     "name": "Ollama Conversation",
     "filename": "ollama_conversation.zip",
     "hide_default_branch": true,
-    "homeassistant": "2023.8.0",
+    "homeassistant": "2023.10.0",
     "zip_release": true
 }
