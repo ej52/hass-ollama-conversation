@@ -56,6 +56,9 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
 
+### Discussions
+Discussions for this integration over on [Home Assistant Community][discussions]
+
 ***
 
 [ollama]: https://ollama.ai/

@@ -48,7 +48,7 @@ Use [black](https://github.com/ambv/black) to make sure the code follows the sty
 
 ## Test your code modification
 
-This custom component is based on [hass-ollama-conversation template](https://github.com/ej52/hass-ollama-conversation).
+This custom component is based on [integration_blueprint template](https://github.com/ludeeus/integration_blueprint).
 
 It comes with development environment in a container, easy to launch
 if you use Visual Studio Code. With this container you will have a stand alone

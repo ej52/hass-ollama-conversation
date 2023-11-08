@@ -32,8 +32,12 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 | Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                              |
 | Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                        |
 
+### Discussions
+Discussions for this integration over on [Home Assistant Community][discussions]
+
 ***
 
 [ollama]: https://ollama.ai/
 [ollama-github]: https://github.com/jmorganca/ollama
 [sentence-trigger]: https://www.home-assistant.io/docs/automation/trigger/#sentence-trigger
+[discussions]: https://community.home-assistant.io/t/custom-integration-ollama-conversation/636103
