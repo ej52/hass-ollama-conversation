@@ -17,34 +17,42 @@ from homeassistant.helpers.selector import (
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
+    SelectOptionDict
 )
 
-from .api import (
-    OllamaApiClient,
-    OllamaApiClientAuthenticationError,
-    OllamaApiClientCommunicationError,
-    OllamaApiClientError,
-)
+from .api import OllamaApiClient
 from .const import (
     DOMAIN, LOGGER,
+    MENU_OPTIONS,
 
     CONF_BASE_URL,
-    CONF_CHAT_MODEL,
-    CONF_PROMPT,
-    CONF_TOP_K,
-    CONF_TOP_P,
+    CONF_MODEL,
     CONF_CTX_SIZE,
     CONF_MAX_TOKENS,
+    CONF_MIROSTAT_MODE,
+    CONF_MIROSTAT_ETA,
+    CONF_MIROSTAT_TAU,
     CONF_TEMPERATURE,
+    CONF_TOP_K,
+    CONF_TOP_P,
+    CONF_PROMPT_SYSTEM,
 
     DEFAULT_BASE_URL,
-    DEFAULT_CHAT_MODEL,
-    DEFAULT_PROMPT,
+    DEFAULT_MODEL,
     DEFAULT_CTX_SIZE,
     DEFAULT_MAX_TOKENS,
+    DEFAULT_MIROSTAT_MODE,
+    DEFAULT_MIROSTAT_ETA,
+    DEFAULT_MIROSTAT_TAU,
     DEFAULT_TEMPERATURE,
     DEFAULT_TOP_K,
-    DEFAULT_TOP_P
+    DEFAULT_TOP_P,
+    DEFAULT_PROMPT_SYSTEM
+)
+from .exceptions import (
+    ApiClientError,
+    ApiCommError,
+    ApiTimeoutError
 )
 
 
@@ -57,13 +65,16 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 DEFAULT_OPTIONS = types.MappingProxyType(
     {
         CONF_BASE_URL: DEFAULT_BASE_URL,
-        CONF_CHAT_MODEL: DEFAULT_CHAT_MODEL,
-        CONF_PROMPT: DEFAULT_PROMPT,
+        CONF_MODEL: DEFAULT_MODEL,
         CONF_CTX_SIZE: DEFAULT_CTX_SIZE,
         CONF_MAX_TOKENS: DEFAULT_MAX_TOKENS,
+        CONF_MIROSTAT_MODE: DEFAULT_MIROSTAT_MODE,
+        CONF_MIROSTAT_ETA: DEFAULT_MIROSTAT_ETA,
+        CONF_MIROSTAT_TAU: DEFAULT_MIROSTAT_TAU,
         CONF_TOP_K: DEFAULT_TOP_K,
         CONF_TOP_P: DEFAULT_TOP_P,
-        CONF_TEMPERATURE: DEFAULT_TEMPERATURE
+        CONF_TEMPERATURE: DEFAULT_TEMPERATURE,
+        CONF_PROMPT_SYSTEM: DEFAULT_PROMPT_SYSTEM
     }
 )
 
@@ -81,27 +92,26 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 step_id="user", data_schema=STEP_USER_DATA_SCHEMA
             )
 
-
         errors = {}
         try:
-            client = OllamaApiClient(
+            self.client = OllamaApiClient(
                 base_url=cv.url_no_path(user_input[CONF_BASE_URL]),
                 session=async_create_clientsession(self.hass),
             )
-            response = await client.async_get_heartbeat()
+            response = await self.client.async_get_heartbeat()
             if not response:
                 raise vol.Invalid("Invalid Ollama server")
         except vol.Invalid:
             errors["base"] = "invalid_url"
-        except OllamaApiClientAuthenticationError:
-            errors["base"] = "invalid_auth"
-        except OllamaApiClientCommunicationError:
+        except ApiTimeoutError:
+            errors["base"] = "timeout_connect"
+        except ApiCommError:
             errors["base"] = "cannot_connect"
-        except OllamaApiClientError as exception:
+        except ApiClientError as exception:
             LOGGER.exception("Unexpected exception: %s", exception)
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title="Ollama Conversation", data=user_input)
+            return self.async_create_entry(title="", data=user_input)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
@@ -126,8 +136,32 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options."""
+        return self.async_show_menu(
+            step_id="init",
+            menu_options=MENU_OPTIONS
+        )
+
+    async def async_step_prompt_system(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage Prompt Templates"""
         if user_input is not None:
-            return self.async_create_entry(title="Ollama Conversation", data=user_input)
+            user_input.update(self.config_entry.options)
+            return self.async_create_entry(title="", data=user_input)
+
+        schema = ollama_schema_prompt_system(self.config_entry.options)
+        return self.async_show_form(
+            step_id="prompt_system",
+            data_schema=vol.Schema(schema)
+        )
+
+    async def async_step_model_config(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage Model Settings"""
+        if user_input is not None:
+            user_input.update(self.config_entry.options)
+            return self.async_create_entry(title="", data=user_input)
 
         try:
             client = OllamaApiClient(
@@ -136,39 +170,46 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
             )
             response = await client.async_get_models()
             models = response["models"]
-        except OllamaApiClientError as exception:
+        except ApiClientError as exception:
             LOGGER.exception("Unexpected exception: %s", exception)
             models = []
 
-        schema = ollama_config_option_schema(self.config_entry.options, [model["name"] for model in models])
+        schema = ollama_schema_model_config(self.config_entry.options, [model["name"] for model in models])
         return self.async_show_form(
-            step_id="init",
+            step_id="model_config",
             data_schema=vol.Schema(schema)
         )
 
 
-def ollama_config_option_schema(options: MappingProxyType[str, Any], MODELS: []) -> dict:
-    """Return a schema for Ollama completion options."""
+def ollama_schema_prompt_system(options: MappingProxyType[str, Any]) -> dict:
+    """Return a schema for system prompt."""
     if not options:
         options = DEFAULT_OPTIONS
     return {
         vol.Optional(
-            CONF_PROMPT,
-            description={"suggested_value": options[CONF_PROMPT]},
-            default=DEFAULT_PROMPT,
-        ): TemplateSelector(),
-        vol.Optional(
-            CONF_CHAT_MODEL,
+            CONF_PROMPT_SYSTEM,
+            description={"suggested_value": options.get(CONF_PROMPT_SYSTEM, DEFAULT_PROMPT_SYSTEM)},
+            default=DEFAULT_PROMPT_SYSTEM,
+        ): TemplateSelector()
+    }
+
+def ollama_schema_model_config(options: MappingProxyType[str, Any], MODELS: []) -> dict:
+    """Return a schema for model config."""
+    if not options:
+        options = DEFAULT_OPTIONS
+    return {
+        vol.Required(
+            CONF_MODEL,
             description={
-                "suggested_value": options.get(CONF_CHAT_MODEL, DEFAULT_CHAT_MODEL)
+                "suggested_value": options.get(CONF_MODEL, DEFAULT_MODEL)
             },
-            default=DEFAULT_CHAT_MODEL
+            default=DEFAULT_MODEL
         ): SelectSelector(
             SelectSelectorConfig(
                 options=MODELS,
                 mode=SelectSelectorMode.DROPDOWN,
                 custom_value=True,
-                translation_key=CONF_CHAT_MODEL,
+                translation_key=CONF_MODEL,
                 sort=True
             )
         ),
@@ -179,22 +220,51 @@ def ollama_config_option_schema(options: MappingProxyType[str, Any], MODELS: [])
         ): int,
         vol.Optional(
             CONF_MAX_TOKENS,
-            description={"suggested_value": options[CONF_MAX_TOKENS]},
+            description={"suggested_value": options.get(CONF_MAX_TOKENS, DEFAULT_MAX_TOKENS)},
             default=DEFAULT_MAX_TOKENS,
         ): int,
         vol.Optional(
+            CONF_MIROSTAT_MODE,
+            description={
+                "suggested_value": options.get(CONF_MIROSTAT_MODE, DEFAULT_MIROSTAT_MODE)
+            },
+            default=DEFAULT_MIROSTAT_MODE
+        ): SelectSelector(
+            SelectSelectorConfig(
+                options=[
+                    SelectOptionDict(value="0", label="Disabled"),
+                    SelectOptionDict(value="1", label="Mirostat (Enabled)"),
+                    SelectOptionDict(value="2", label="Mirostat 2.0 (Enabled)"),
+                ],
+                mode=SelectSelectorMode.DROPDOWN,
+                custom_value=False,
+                translation_key=CONF_MIROSTAT_MODE,
+                sort=True
+            )
+        ),
+        vol.Optional(
+            CONF_MIROSTAT_ETA,
+            description={"suggested_value": options.get(CONF_MIROSTAT_ETA, DEFAULT_MIROSTAT_ETA)},
+            default=DEFAULT_MIROSTAT_ETA,
+        ): NumberSelector(NumberSelectorConfig(min=0, max=1, step=0.05)),
+        vol.Optional(
+            CONF_MIROSTAT_TAU,
+            description={"suggested_value": options.get(CONF_MIROSTAT_TAU, DEFAULT_MIROSTAT_TAU)},
+            default=DEFAULT_MIROSTAT_TAU,
+        ): NumberSelector(NumberSelectorConfig(min=0, max=10, step=0.5)),
+        vol.Optional(
             CONF_TEMPERATURE,
-            description={"suggested_value": options[CONF_TEMPERATURE]},
+            description={"suggested_value": options.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE)},
             default=DEFAULT_TEMPERATURE,
         ): NumberSelector(NumberSelectorConfig(min=0, max=1, step=0.05)),
         vol.Optional(
             CONF_TOP_K,
-            description={"suggested_value": options[CONF_TOP_K]},
+            description={"suggested_value": options.get(CONF_TOP_K, DEFAULT_TOP_K)},
             default=DEFAULT_TOP_K,
         ): NumberSelector(NumberSelectorConfig(min=0, max=100, step=1)),
         vol.Optional(
             CONF_TOP_P,
-            description={"suggested_value": options[CONF_TOP_P]},
+            description={"suggested_value": options.get(CONF_TOP_P, DEFAULT_TOP_P)},
             default=DEFAULT_TOP_P,
         ): NumberSelector(NumberSelectorConfig(min=0, max=1, step=0.05)),
     }
