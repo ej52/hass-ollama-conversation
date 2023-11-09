@@ -11,8 +11,8 @@ TIMEOUT = 60
 MENU_OPTIONS = ["model_config", "prompt_system"]
 
 CONF_BASE_URL = "base_url"
-CONF_PROMPT_SYSTEM = "prompt_system"
-CONF_MODEL = "model"
+CONF_PROMPT_SYSTEM = "prompt"
+CONF_MODEL = "chat_model"
 CONF_TOP_K = "top_k"
 CONF_TOP_P = "top_p"
 CONF_CTX_SIZE = "ctx_size"
