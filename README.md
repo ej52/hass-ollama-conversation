@@ -40,16 +40,23 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 * If multiple instances of Ollama Conversation are configured, choose the instance you want to configure.
 * Select the integration, then select ___Configure___.
 
+#### System Prompt
+The starting text for the AI language model to generate new text from. This text can include information about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating.
+
+#### Model Configuration
+The language model and additional parameters to fine tune the responses.
 
 | Option                   | Description                                                                                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prompt Template          | The starting text for the AI language model to generate new text from. This text can include information about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating. |
-| Completion Model         | The model used to generate response.                                                                                                                                                                                |
+| Model                    | The model used to generate response.                                                                                                                                                                                |
 | Context Size             | Sets the size of the context window used to generate the next token.                                                                                                                                                |
 | Maximum Tokens           | The maximum number of words or “tokens” that the AI model should generate in its completion of the prompt.                                                                                                          |
-| Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a lower value (e.g. 0.5) will be more deterministic results.                                              |
-| Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                              |
-| Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                        |
+| Mirostat Mode            | Enable Mirostat sampling for controlling perplexity.                                                                                                                                                                |
+| Mirostat ETA             | Influences how quickly the algorithm responds to feedback from the generated text. A lower learning rate will result in slower adjustments, while a higher learning rate will make the algorithm more responsive.   |
+| Mirostat TAU             | Controls the balance between coherence and diversity of the output. A lower value will result in more focused and coherent text.                                                                                    |
+| Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a lower value (e.g. 0.5) will be more deterministic results.                                                  |
+| Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                                  |
+| Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                            |                                      |
 
 
 ## Contributions are welcome!
