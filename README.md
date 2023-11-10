@@ -64,3 +64,4 @@ Discussions for this integration over on [Home Assistant Community][discussions]
 [ollama]: https://ollama.ai/
 [ollama-github]: https://github.com/jmorganca/ollama
 [sentence-trigger]: https://www.home-assistant.io/docs/automation/trigger/#sentence-trigger
+[discussions]: https://community.home-assistant.io/t/custom-integration-ollama-conversation-local-ai-agent/636103
