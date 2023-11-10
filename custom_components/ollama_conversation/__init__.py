@@ -129,7 +129,7 @@ class OllamaAgent(conversation.AbstractConversationAgent):
                 intent_response = intent.IntentResponse(language=user_input.language)
                 intent_response.async_set_error(
                     intent.IntentResponseErrorCode.UNKNOWN,
-                    f"I had a problem with my system prompt, please check the logs for more information.",
+                    "I had a problem with my system prompt, please check the logs for more information.",
                 )
                 return conversation.ConversationResult(
                     response=intent_response, conversation_id=conversation_id
@@ -162,7 +162,7 @@ class OllamaAgent(conversation.AbstractConversationAgent):
             intent_response = intent.IntentResponse(language=user_input.language)
             intent_response.async_set_error(
                 intent.IntentResponseErrorCode.UNKNOWN,
-                f"Something went wrong, please check the logs for more information.",
+                "Something went wrong, please check the logs for more information.",
             )
             return conversation.ConversationResult(
                 response=intent_response, conversation_id=conversation_id

@@ -1,9 +1,12 @@
+"""Helper functions for Ollama."""
+
 from homeassistant.components.conversation import DOMAIN as CONVERSATION_DOMAIN
 from homeassistant.components.homeassistant.exposed_entities import async_should_expose
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry
 
 def get_exposed_entities(hass: HomeAssistant) -> list[dict]:
+    """Return exposed entities."""
     hass_entity = entity_registry.async_get(hass)
     exposed_entities:list[dict] = []
 

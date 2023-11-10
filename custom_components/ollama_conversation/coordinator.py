@@ -9,7 +9,6 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
 )
-from homeassistant.exceptions import ConfigEntryAuthFailed
 
 from .api import OllamaApiClient
 from .const import DOMAIN, LOGGER

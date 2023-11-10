@@ -147,7 +147,7 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
     async def async_step_prompt_system(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Manage Prompt Templates"""
+        """Manage Prompt Templates."""
         if user_input is not None:
             user_input.update(self.config_entry.options)
             return self.async_create_entry(title="", data=user_input)
@@ -161,7 +161,7 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
     async def async_step_model_config(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Manage Model Settings"""
+        """Manage Model Settings."""
         if user_input is not None:
             user_input.update(self.config_entry.options)
             return self.async_create_entry(title="", data=user_input)
