@@ -1,9 +1,3 @@
-[![GitHub Release](https://img.shields.io/github/release/ej52/hass-ollama-conversation.svg?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/releases)
-[![Downloads](https://img.shields.io/github/downloads/ej52/hass-ollama-conversation/total?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/ej52/hass-ollama-conversation/validate.yml?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/actions/workflows/validate.yaml)
-[![License](https://img.shields.io/github/license/ej52/hass-ollama-conversation.svg?style=flat-square)](LICENSE)
-[![hacs](https://img.shields.io/badge/HACS-default-orange.svg?style=flat-square)](https://hacs.xyz)
-
 # Ollama Conversation
 
 The Ollama integration adds a conversation agent powered by [Ollama][ollama] in Home Assistant.
@@ -42,6 +36,7 @@ The language model and additional parameters to fine tune the responses.
 | Mirostat ETA             | Influences how quickly the algorithm responds to feedback from the generated text. A lower learning rate will result in slower adjustments, while a higher learning rate will make the algorithm more responsive.   |
 | Mirostat TAU             | Controls the balance between coherence and diversity of the output. A lower value will result in more focused and coherent text.                                                                                    |
 | Temperature              | The temperature of the model. A higher value (e.g., 0.95) will lead to more unexpected results, while a lower value (e.g. 0.5) will be more deterministic results.                                                  |
+| Repeat Penalty           | Sets how strongly to penalize repetitions. A higher value (e.g., 1.5) will penalize repetitions more strongly, while a lower value (e.g., 0.9) will be more lenient.                                                |
 | Top K                    | Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.                                                  |
 | Top P                    | Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.                                            |
 
