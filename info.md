@@ -1,8 +1,8 @@
-[![GitHub Release](https://img.shields.io/github/release/ej52/hass-ollama-conversation.svg)](https://github.com/ej52/hass-ollama-conversation/releases)
-[![Downloads](https://img.shields.io/github/downloads/ej52/hass-ollama-conversation/total)](https://github.com/ej52/hass-ollama-conversation/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/ej52/hass-ollama-conversation/validate.yml)](https://github.com/ej52/hass-ollama-conversation/actions/workflows/validate.yaml)
-[![License](https://img.shields.io/github/license/ej52/hass-ollama-conversation.svg)](LICENSE)
-[![hacs](https://img.shields.io/badge/HACS-default-orange.svg)](https://hacs.xyz)
+[![GitHub Release](https://img.shields.io/github/release/ej52/hass-ollama-conversation.svg?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/releases)
+[![Downloads](https://img.shields.io/github/downloads/ej52/hass-ollama-conversation/total?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/ej52/hass-ollama-conversation/validate.yml?style=flat-square)](https://github.com/ej52/hass-ollama-conversation/actions/workflows/validate.yaml)
+[![License](https://img.shields.io/github/license/ej52/hass-ollama-conversation.svg?style=flat-square)](LICENSE)
+[![hacs](https://img.shields.io/badge/HACS-default-orange.svg?style=flat-square)](https://hacs.xyz)
 
 # Ollama Conversation
 
