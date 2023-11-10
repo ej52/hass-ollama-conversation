@@ -3,33 +3,45 @@
         "step": {
             "user": {
                 "data": {
-                    "base_url": "API Base Url"
+                    "base_url": "Base Url"
                 }
             }
         },
         "error": {
-            "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-            "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+            "cannot_connect": "Failed to connect",
             "invalid_url": "Invalid URL",
-            "unknown": "[%key:common::config_flow::error::unknown%]"
+            "timeout_connect": "Timeout establishing connection",
+            "unknown": "Unexpected error, check logs"
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "Service is already configured"
         }
     },
     "options": {
         "step": {
             "init": {
-                "title": "Ollama configuration",
+                "menu_options": {
+                    "model_config": "Model Configuration",
+                    "prompt_system": "System Prompt"
+                }
+            },
+            "model_config": {
+                "title": "Model Configuration",
                 "data": {
-                    "prompt": "Prompt Template",
-                    "chat_model": "Completion Model",
+                    "chat_model": "Model",
                     "ctx_size": "Context Size",
                     "max_tokens": "Maximum Tokens",
+                    "mirostat_mode": "Mirostat Mode",
+                    "mirostat_eta": "Mirostat ETA",
+                    "mirostat_tau": "Mirostat TAU",
+                    "repeat_penalty": "Repeat Penalty",
                     "temperature": "Temperature",
                     "top_p": "Top P",
                     "top_k": "Top K"
                 }
+            },
+            "prompt_system": {
+                "title": "System Prompt"
             }
         }
     }

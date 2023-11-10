@@ -8,26 +8,16 @@ import aiohttp
 import async_timeout
 
 from .const import TIMEOUT
-
-
-class OllamaApiClientError(Exception):
-    """Exception to indicate a general API error."""
-
-
-class OllamaApiClientCommunicationError(
-    OllamaApiClientError
-):
-    """Exception to indicate a communication error."""
-
-
-class OllamaApiClientAuthenticationError(
-    OllamaApiClientError
-):
-    """Exception to indicate an authentication error."""
+from .exceptions import (
+    ApiClientError,
+    ApiCommError,
+    ApiJsonError,
+    ApiTimeoutError
+)
 
 
 class OllamaApiClient:
-    """Sample API Client."""
+    """Ollama API Client."""
 
     def __init__(
         self,
@@ -40,10 +30,10 @@ class OllamaApiClient:
 
     async def async_get_heartbeat(self) -> bool:
         """Get heartbeat from the API."""
-        response = await self._api_wrapper(
+        response: str = await self._api_wrapper(
             method="get", url=self._base_url, decode_json=False
         )
-        return response == "Ollama is running"
+        return response.strip() == "Ollama is running"
 
     async def async_get_models(self) -> any:
         """Get models from the API."""
@@ -78,28 +68,23 @@ class OllamaApiClient:
                     method=method,
                     url=url,
                     headers=headers,
-                    raise_for_status=True,
                     json=data,
                 )
 
-                if response.status in (401, 403):
-                    raise OllamaApiClientAuthenticationError(
-                        "Invalid credentials",
-                    )
+                if response.status == 404 and decode_json:
+                    json = await response.json()
+                    raise ApiJsonError(json["error"])
+
+                response.raise_for_status()
 
                 if decode_json:
                     return await response.json()
                 return await response.text()
-
-        except asyncio.TimeoutError as exception:
-            raise OllamaApiClientCommunicationError(
-                "Timeout error fetching information",
-            ) from exception
-        except (aiohttp.ClientError, socket.gaierror) as exception:
-            raise OllamaApiClientCommunicationError(
-                "Error fetching information",
-            ) from exception
-        except Exception as exception:  # pylint: disable=broad-except
-            raise OllamaApiClientError(
-                "Something really wrong happened!"
-            ) from exception
+        except ApiJsonError as e:
+            raise e
+        except asyncio.TimeoutError as e:
+            raise ApiTimeoutError("timeout while talking to the server") from e
+        except (aiohttp.ClientError, socket.gaierror) as e:
+            raise ApiCommError("unknown error while talking to the server") from e
+        except Exception as e:  # pylint: disable=broad-except
+            raise ApiClientError("something really went wrong!") from e
