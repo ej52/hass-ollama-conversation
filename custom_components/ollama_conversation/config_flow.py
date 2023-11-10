@@ -139,6 +139,7 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
         self.config_entry = config_entry
+        self.options = dict(config_entry.options)
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -154,8 +155,8 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
     ) -> FlowResult:
         """Manage Prompt Templates."""
         if user_input is not None:
-            user_input.update(self.config_entry.options)
-            return self.async_create_entry(title="", data=user_input)
+            self.options.update(user_input)
+            return self.async_create_entry(title="", data=self.options)
 
         schema = ollama_schema_prompt_system(self.config_entry.options)
         return self.async_show_form(
@@ -168,8 +169,8 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
     ) -> FlowResult:
         """Manage Model Settings."""
         if user_input is not None:
-            user_input.update(self.config_entry.options)
-            return self.async_create_entry(title="", data=user_input)
+            self.options.update(user_input)
+            return self.async_create_entry(title="", data=self.options)
 
         try:
             client = OllamaApiClient(
