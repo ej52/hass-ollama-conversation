@@ -95,6 +95,11 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 step_id="user", data_schema=STEP_USER_DATA_SCHEMA
             )
 
+        # Search for duplicates with the same CONF_BASE_URL value.
+        for existing_entry in self._async_current_entries(include_ignore=False):
+            if existing_entry.data.get(CONF_BASE_URL) == user_input[CONF_BASE_URL]:
+                return self.async_abort(reason="already_configured")
+
         errors = {}
         try:
             self.client = OllamaApiClient(
@@ -114,7 +119,7 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             LOGGER.exception("Unexpected exception: %s", exception)
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title="", data=user_input)
+            return self.async_create_entry(title=f"Ollama - {user_input[CONF_BASE_URL]}", data=user_input)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
