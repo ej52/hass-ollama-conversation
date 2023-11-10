@@ -33,6 +33,7 @@ from .const import (
     CONF_MIROSTAT_ETA,
     CONF_MIROSTAT_TAU,
     CONF_TEMPERATURE,
+    CONF_REPEAT_PENALTY,
     CONF_TOP_K,
     CONF_TOP_P,
     CONF_PROMPT_SYSTEM,
@@ -45,6 +46,7 @@ from .const import (
     DEFAULT_MIROSTAT_ETA,
     DEFAULT_MIROSTAT_TAU,
     DEFAULT_TEMPERATURE,
+    DEFAULT_REPEAT_PENALTY,
     DEFAULT_TOP_K,
     DEFAULT_TOP_P,
     DEFAULT_PROMPT_SYSTEM
@@ -71,9 +73,10 @@ DEFAULT_OPTIONS = types.MappingProxyType(
         CONF_MIROSTAT_MODE: DEFAULT_MIROSTAT_MODE,
         CONF_MIROSTAT_ETA: DEFAULT_MIROSTAT_ETA,
         CONF_MIROSTAT_TAU: DEFAULT_MIROSTAT_TAU,
+        CONF_TEMPERATURE: DEFAULT_TEMPERATURE,
+        CONF_REPEAT_PENALTY: DEFAULT_REPEAT_PENALTY,
         CONF_TOP_K: DEFAULT_TOP_K,
         CONF_TOP_P: DEFAULT_TOP_P,
-        CONF_TEMPERATURE: DEFAULT_TEMPERATURE,
         CONF_PROMPT_SYSTEM: DEFAULT_PROMPT_SYSTEM
     }
 )
@@ -223,7 +226,7 @@ def ollama_schema_model_config(options: MappingProxyType[str, Any], MODELS: []) 
             description={"suggested_value": options.get(CONF_MAX_TOKENS, DEFAULT_MAX_TOKENS)},
             default=DEFAULT_MAX_TOKENS,
         ): int,
-        vol.Optional(
+        vol.Required(
             CONF_MIROSTAT_MODE,
             description={
                 "suggested_value": options.get(CONF_MIROSTAT_MODE, DEFAULT_MIROSTAT_MODE)
@@ -257,6 +260,11 @@ def ollama_schema_model_config(options: MappingProxyType[str, Any], MODELS: []) 
             description={"suggested_value": options.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE)},
             default=DEFAULT_TEMPERATURE,
         ): NumberSelector(NumberSelectorConfig(min=0, max=1, step=0.05)),
+        vol.Optional(
+            CONF_REPEAT_PENALTY,
+            description={"suggested_value": options.get(CONF_REPEAT_PENALTY, DEFAULT_REPEAT_PENALTY)},
+            default=DEFAULT_REPEAT_PENALTY,
+        ): NumberSelector(NumberSelectorConfig(min=0, max=2, step=0.05)),
         vol.Optional(
             CONF_TOP_K,
             description={"suggested_value": options.get(CONF_TOP_K, DEFAULT_TOP_K)},

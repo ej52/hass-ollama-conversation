@@ -28,6 +28,7 @@ from .const import (
     CONF_MIROSTAT_ETA,
     CONF_MIROSTAT_TAU,
     CONF_TEMPERATURE,
+    CONF_REPEAT_PENALTY,
     CONF_TOP_K,
     CONF_TOP_P,
     CONF_PROMPT_SYSTEM,
@@ -39,6 +40,7 @@ from .const import (
     DEFAULT_MIROSTAT_ETA,
     DEFAULT_MIROSTAT_TAU,
     DEFAULT_TEMPERATURE,
+    DEFAULT_REPEAT_PENALTY,
     DEFAULT_TOP_K,
     DEFAULT_TOP_P,
     DEFAULT_PROMPT_SYSTEM
@@ -204,11 +206,12 @@ class OllamaAgent(conversation.AbstractConversationAgent):
                 "mirostat": int(self.entry.options.get(CONF_MIROSTAT_MODE, DEFAULT_MIROSTAT_MODE)),
                 "mirostat_eta": self.entry.options.get(CONF_MIROSTAT_ETA, DEFAULT_MIROSTAT_ETA),
                 "mirostat_tau": self.entry.options.get(CONF_MIROSTAT_TAU, DEFAULT_MIROSTAT_TAU),
-                "top_k": self.entry.options.get(CONF_TOP_K, DEFAULT_TOP_K),
-                "top_p": self.entry.options.get(CONF_TOP_P, DEFAULT_TOP_P),
                 "num_ctx": self.entry.options.get(CONF_CTX_SIZE, DEFAULT_CTX_SIZE),
                 "num_predict": self.entry.options.get(CONF_MAX_TOKENS, DEFAULT_MAX_TOKENS),
-                "temperature": self.entry.options.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE)
+                "temperature": self.entry.options.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE),
+                "repeat_penalty": self.entry.options.get(CONF_REPEAT_PENALTY, DEFAULT_REPEAT_PENALTY),
+                "top_k": self.entry.options.get(CONF_TOP_K, DEFAULT_TOP_K),
+                "top_p": self.entry.options.get(CONF_TOP_P, DEFAULT_TOP_P)
             }
         })
 

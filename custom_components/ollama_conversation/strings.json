@@ -28,7 +28,7 @@
             "model_config": {
                 "title": "Model Configuration",
                 "data": {
-                    "model": "Model",
+                    "chat_model": "Model",
                     "ctx_size": "Context Size",
                     "max_tokens": "Maximum Tokens",
                     "mirostat_mode": "Mirostat Mode",
