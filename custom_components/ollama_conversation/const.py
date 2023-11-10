@@ -5,7 +5,6 @@ LOGGER: Logger = getLogger(__package__)
 
 NAME = "Ollama Conversation"
 DOMAIN = "ollama_conversation"
-VERSION = "0.1.10"
 TIMEOUT = 60
 
 MENU_OPTIONS = ["model_config", "prompt_system"]
