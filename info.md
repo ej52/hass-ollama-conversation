@@ -21,6 +21,13 @@ Options for Ollama Conversation can be set via the user interface, by taking the
 * If multiple instances of Ollama Conversation are configured, choose the instance you want to configure.
 * Select the integration, then select ___Configure___.
 
+#### General Settings
+Settings relating to the integration itself.
+
+| Option                   | Description                                                                                                                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API Timeout              | The maximum amount of time to wait for a response from the API in seconds                                                                                                                                           |
+
 #### System Prompt
 The starting text for the AI language model to generate new text from. This text can include information about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating.
 

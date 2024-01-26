@@ -7,7 +7,6 @@ import socket
 import aiohttp
 import async_timeout
 
-from .const import TIMEOUT
 from .exceptions import (
     ApiClientError,
     ApiCommError,
@@ -22,10 +21,12 @@ class OllamaApiClient:
     def __init__(
         self,
         base_url: str,
+        timeout: int,
         session: aiohttp.ClientSession,
     ) -> None:
         """Sample API Client."""
         self._base_url = base_url.rstrip("/")
+        self.timeout = timeout
         self._session = session
 
     async def async_get_heartbeat(self) -> bool:
@@ -63,7 +64,7 @@ class OllamaApiClient:
     ) -> any:
         """Get information from the API."""
         try:
-            async with async_timeout.timeout(TIMEOUT):
+            async with async_timeout.timeout(self.timeout):
                 response = await self._session.request(
                     method=method,
                     url=url,

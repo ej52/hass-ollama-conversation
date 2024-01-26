@@ -5,11 +5,11 @@ LOGGER: Logger = getLogger(__package__)
 
 NAME = "Ollama Conversation"
 DOMAIN = "ollama_conversation"
-TIMEOUT = 60
 
-MENU_OPTIONS = ["model_config", "prompt_system"]
+MENU_OPTIONS = ["general_config", "model_config", "prompt_system"]
 
 CONF_BASE_URL = "base_url"
+CONF_TIMEOUT = "timeout"
 CONF_MODEL = "chat_model"
 CONF_CTX_SIZE = "ctx_size"
 CONF_MAX_TOKENS = "max_tokens"
@@ -23,6 +23,7 @@ CONF_TOP_P = "top_p"
 CONF_PROMPT_SYSTEM = "prompt"
 
 DEFAULT_BASE_URL = "http://homeassistant.local:11434"
+DEFAULT_TIMEOUT = 60
 DEFAULT_MODEL = "llama2:latest"
 DEFAULT_CTX_SIZE = 2048
 DEFAULT_MAX_TOKENS = 128
