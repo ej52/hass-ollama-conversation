@@ -124,11 +124,11 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             LOGGER.exception("Unexpected exception: %s", exception)
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title=f"Ollama - {user_input[CONF_BASE_URL]}", data=dict({
+            return self.async_create_entry(title=f"Ollama - {user_input[CONF_BASE_URL]}", data={
                 CONF_BASE_URL: user_input[CONF_BASE_URL]
-            }), options=dict({
+            }, options={
                 CONF_TIMEOUT: user_input[CONF_TIMEOUT]
-            }))
+            })
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
