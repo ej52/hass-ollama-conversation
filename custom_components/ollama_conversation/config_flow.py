@@ -26,6 +26,7 @@ from .const import (
     MENU_OPTIONS,
 
     CONF_BASE_URL,
+    CONF_TIMEOUT,
     CONF_MODEL,
     CONF_CTX_SIZE,
     CONF_MAX_TOKENS,
@@ -39,6 +40,7 @@ from .const import (
     CONF_PROMPT_SYSTEM,
 
     DEFAULT_BASE_URL,
+    DEFAULT_TIMEOUT,
     DEFAULT_MODEL,
     DEFAULT_CTX_SIZE,
     DEFAULT_MAX_TOKENS,
@@ -61,12 +63,14 @@ from .exceptions import (
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_BASE_URL, default=DEFAULT_BASE_URL): str,
+        vol.Required(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): int,
     }
 )
 
 DEFAULT_OPTIONS = types.MappingProxyType(
     {
         CONF_BASE_URL: DEFAULT_BASE_URL,
+        CONF_TIMEOUT: DEFAULT_TIMEOUT,
         CONF_MODEL: DEFAULT_MODEL,
         CONF_CTX_SIZE: DEFAULT_CTX_SIZE,
         CONF_MAX_TOKENS: DEFAULT_MAX_TOKENS,
@@ -104,6 +108,7 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             self.client = OllamaApiClient(
                 base_url=cv.url_no_path(user_input[CONF_BASE_URL]),
+                timeout=user_input[CONF_TIMEOUT],
                 session=async_create_clientsession(self.hass),
             )
             response = await self.client.async_get_heartbeat()
@@ -119,7 +124,11 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             LOGGER.exception("Unexpected exception: %s", exception)
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title=f"Ollama - {user_input[CONF_BASE_URL]}", data=user_input)
+            return self.async_create_entry(title=f"Ollama - {user_input[CONF_BASE_URL]}", data={
+                CONF_BASE_URL: user_input[CONF_BASE_URL]
+            }, options={
+                CONF_TIMEOUT: user_input[CONF_TIMEOUT]
+            })
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
@@ -150,6 +159,20 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
             menu_options=MENU_OPTIONS
         )
 
+    async def async_step_general_config(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage General Settings."""
+        if user_input is not None:
+            self.options.update(user_input)
+            return self.async_create_entry(title="", data=self.options)
+
+        schema = ollama_schema_general_config(self.config_entry.options)
+        return self.async_show_form(
+            step_id="general_config",
+            data_schema=vol.Schema(schema)
+        )
+
     async def async_step_prompt_system(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
@@ -175,6 +198,7 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
         try:
             client = OllamaApiClient(
                 base_url=cv.url_no_path(self.config_entry.data[CONF_BASE_URL]),
+                timeout=self.config_entry.options.get(CONF_TIMEOUT, DEFAULT_TIMEOUT),
                 session=async_create_clientsession(self.hass),
             )
             response = await client.async_get_models()
@@ -189,6 +213,17 @@ class OllamaOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema(schema)
         )
 
+def ollama_schema_general_config(options: MappingProxyType[str, Any]) -> dict:
+    """Return a schema for general config."""
+    if not options:
+        options = DEFAULT_OPTIONS
+    return {
+        vol.Optional(
+            CONF_TIMEOUT,
+            description={"suggested_value": options.get(CONF_TIMEOUT, DEFAULT_TIMEOUT)},
+            default=DEFAULT_TIMEOUT,
+        ): int,
+    }
 
 def ollama_schema_prompt_system(options: MappingProxyType[str, Any]) -> dict:
     """Return a schema for system prompt."""

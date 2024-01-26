@@ -21,8 +21,15 @@
         "step": {
             "init": {
                 "menu_options": {
+                    "general_config": "General Settings",
                     "model_config": "Model Configuration",
                     "prompt_system": "System Prompt"
+                }
+            },
+            "general_config": {
+                "title": "General Settings",
+                "data": {
+                    "timeout": "API Timeout"
                 }
             },
             "model_config": {

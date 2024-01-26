@@ -21,6 +21,7 @@ from .const import (
     DOMAIN, LOGGER,
 
     CONF_BASE_URL,
+    CONF_TIMEOUT,
     CONF_MODEL,
     CONF_CTX_SIZE,
     CONF_MAX_TOKENS,
@@ -33,6 +34,7 @@ from .const import (
     CONF_TOP_P,
     CONF_PROMPT_SYSTEM,
 
+    DEFAULT_TIMEOUT,
     DEFAULT_MODEL,
     DEFAULT_CTX_SIZE,
     DEFAULT_MAX_TOKENS,
@@ -60,6 +62,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     client = OllamaApiClient(
         base_url=entry.data[CONF_BASE_URL],
+        timeout=entry.options.get(CONF_TIMEOUT, DEFAULT_TIMEOUT),
         session=async_get_clientsession(hass),
     )
 
