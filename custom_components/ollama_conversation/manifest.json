@@ -11,6 +11,6 @@
   "documentation": "https://github.com/ej52/hass-ollama-conversation#options",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/ej52/hass-ollama-conversatio/issues",
+  "issue_tracker": "https://github.com/ej52/hass-ollama-conversation/issues",
   "version": "0.0.0"
 }
