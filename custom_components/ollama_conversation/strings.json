@@ -3,7 +3,8 @@
         "step": {
             "user": {
                 "data": {
-                    "base_url": "Base Url"
+                    "base_url": "Base Url",
+                    "timeout": "API Timeout"
                 }
             }
         },
