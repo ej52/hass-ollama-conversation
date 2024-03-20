@@ -52,9 +52,14 @@ Settings relating to the integration itself.
 | Option                   | Description                                                                                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | API Timeout              | The maximum amount of time to wait for a response from the API in seconds                                                                                                                                           |
+| Intent Handler           | Choose wether to use the Built-in HA intent agent or not                                                                                                                                                            |
 
 #### System Prompt
 The starting text for the AI language model to generate new text from. This text can include information about your Home Assistant instance, devices, and areas and is written using Home Assistant Templating.
+
+The following variables are availible as extra.
+* `current_device_id`: The device ID of the current voice satellite, used for area awareness [Year of Voice Chapter 5](https://www.home-assistant.io/blog/2023/12/13/year-of-the-voice-chapter-5/#area-awareness)
+* `exposed_entities`: A dict of entities grouped by area
 
 #### Model Configuration
 The language model and additional parameters to fine tune the responses.
