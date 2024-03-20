@@ -30,7 +30,8 @@
             "general_config": {
                 "title": "General Settings",
                 "data": {
-                    "timeout": "API Timeout"
+                    "timeout": "API Timeout",
+                    "intent_handler": "Intent Handler"
                 }
             },
             "model_config": {
@@ -49,7 +50,8 @@
                 }
             },
             "prompt_system": {
-                "title": "System Prompt"
+                "title": "System Prompt",
+                "description": "A list of entities exposed to __Assist__ available in `exposed_entities`. The entities are grouped by `area`"
             }
         }
     }

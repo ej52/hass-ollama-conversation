@@ -1,14 +1,17 @@
-"""The exceptions used by Extended OpenAI Conversation."""
+"""The exceptions used by Ollama Conversation."""
 from homeassistant.exceptions import HomeAssistantError
 
-class ApiClientError(HomeAssistantError):
+class ApiError(HomeAssistantError):
     """Exception to indicate a general API error."""
 
-class ApiCommError(ApiClientError):
+class ApiClientError(ApiError):
+    """Exception to indicate a general API error."""
+
+class ApiCommError(ApiError):
     """Exception to indicate a communication error."""
 
-class ApiJsonError(ApiClientError):
+class ApiJsonError(ApiError):
     """Exception to indicate an error with json response."""
 
-class ApiTimeoutError(ApiClientError):
+class ApiTimeoutError(ApiError):
      """Exception to indicate a timeout error."""

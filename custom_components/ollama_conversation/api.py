@@ -8,12 +8,9 @@ import aiohttp
 import async_timeout
 
 from .exceptions import (
-    ApiClientError,
-    ApiCommError,
     ApiJsonError,
     ApiTimeoutError
 )
-
 
 class OllamaApiClient:
     """Ollama API Client."""
@@ -24,9 +21,9 @@ class OllamaApiClient:
         timeout: int,
         session: aiohttp.ClientSession,
     ) -> None:
-        """Sample API Client."""
+        """Init API Client."""
         self._base_url = base_url.rstrip("/")
-        self.timeout = timeout
+        self._timeout = timeout
         self._session = session
 
     async def async_get_heartbeat(self) -> bool:
@@ -36,6 +33,14 @@ class OllamaApiClient:
         )
         return response.strip() == "Ollama is running"
 
+    async def async_get_version(self) -> bool:
+        """Get version from the API."""
+        return await self._api_wrapper(
+            method="get",
+            url=f"{self._base_url}/api/version",
+            headers={"Content-type": "application/json; charset=UTF-8"},
+        )
+
     async def async_get_models(self) -> any:
         """Get models from the API."""
         return await self._api_wrapper(
@@ -44,15 +49,23 @@ class OllamaApiClient:
             headers={"Content-type": "application/json; charset=UTF-8"},
         )
 
-    async def async_generate(self, data: dict | None = None,) -> any:
+    async def async_chat(self, data: dict | None = None) -> any:
+        """Generate a chat completion from the API."""
+        return await self._api_wrapper(
+            method="post",
+            url=f"{self._base_url}/api/chat",
+            data=data,
+            headers={"Content-type": "application/json; charset=UTF-8"},
+        )
+
+    async def async_generate(self, data: dict | None = None) -> any:
         """Generate a completion from the API."""
         return await self._api_wrapper(
             method="post",
             url=f"{self._base_url}/api/generate",
             data=data,
-            headers={"Content-type": "application/json; charset=UTF-8"},
+            headers={"Content-type": "application/json; charset=UTF-8"}
         )
-
 
     async def _api_wrapper(
         self,
@@ -64,7 +77,7 @@ class OllamaApiClient:
     ) -> any:
         """Get information from the API."""
         try:
-            async with async_timeout.timeout(self.timeout):
+            async with async_timeout.timeout(self._timeout):
                 response = await self._session.request(
                     method=method,
                     url=url,
@@ -86,6 +99,6 @@ class OllamaApiClient:
         except asyncio.TimeoutError as e:
             raise ApiTimeoutError("timeout while talking to the server") from e
         except (aiohttp.ClientError, socket.gaierror) as e:
-            raise ApiCommError("unknown error while talking to the server") from e
+            raise e
         except Exception as e:  # pylint: disable=broad-except
-            raise ApiClientError("something really went wrong!") from e
+            raise e

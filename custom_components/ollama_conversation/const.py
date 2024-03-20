@@ -5,11 +5,18 @@ LOGGER: Logger = getLogger(__package__)
 
 NAME = "Ollama Conversation"
 DOMAIN = "ollama_conversation"
+OLLAMA_REQUIRED_VERSION = "0.1.26"
 
 MENU_OPTIONS = ["general_config", "model_config", "prompt_system"]
 
+INTENT_HANDLER_OPTIONS = {
+    'none': 'No intent handling',
+    'builtin': 'Use built-in agent only'
+}
+
 CONF_BASE_URL = "base_url"
 CONF_TIMEOUT = "timeout"
+CONF_INTENT_HANDLER = "intent_handler"
 CONF_MODEL = "chat_model"
 CONF_CTX_SIZE = "ctx_size"
 CONF_MAX_TOKENS = "max_tokens"
@@ -24,6 +31,7 @@ CONF_PROMPT_SYSTEM = "prompt"
 
 DEFAULT_BASE_URL = "http://homeassistant.local:11434"
 DEFAULT_TIMEOUT = 60
+DEFAULT_INTENT_HANDLER = 'builtin'
 DEFAULT_MODEL = "llama2:latest"
 DEFAULT_CTX_SIZE = 2048
 DEFAULT_MAX_TOKENS = 128
@@ -34,25 +42,21 @@ DEFAULT_TEMPERATURE = 0.8
 DEFAULT_REPEAT_PENALTY = 1.1
 DEFAULT_TOP_K = 40
 DEFAULT_TOP_P = 0.9
-
 DEFAULT_PROMPT_SYSTEM = """This smart home is controlled by Home Assistant.
 
-An overview of the areas and the devices in this smart home:
-{%- for area in areas() %}
-  {%- set area_info = namespace(printed=false) %}
-  {%- for device in area_devices(area) -%}
-    {%- if not device_attr(device, "disabled_by") and not device_attr(device, "entry_type") and device_attr(device, "name") %}
-      {%- if not area_info.printed %}
+Current Time: {{now()}}
+Current Area: {{area_name(current_device_id)}}
 
-{{ area_name(area) }}:
-        {%- set area_info.printed = true %}
-      {%- endif %}
-- {{ device_attr(device, "name") }}{% if device_attr(device, "model") and (device_attr(device, "model") | string) not in (device_attr(device, "name") | string) %} ({{ device_attr(device, "model") }}){% endif %}
-    {%- endif %}
-  {%- endfor %}
-{%- endfor %}
+An overview of the areas and the available devices in this smart home:
+{% for area_id, entities in exposed_entities.items() -%}
+{{ area_name(area_id) }} (Area ID: {{ area_id }}):
+  {% for entity in entities -%}
+{{ entity.name }} (Entity ID: {{ entity.id }} ) is {{ entity.state }}
+  {% endfor -%}
+{% endfor -%}
 
 Answer the user's questions about the world truthfully.
 
+The current state of devices is provided in available devices.
 If the user wants to control a device, reject the request and suggest using the Home Assistant app.
 """

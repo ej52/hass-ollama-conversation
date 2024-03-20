@@ -1,8 +1,98 @@
-# https://www.home-assistant.io/integrations/default_config/
+
+# Loads default set of integrations. Do not remove.
 default_config:
 
-# https://www.home-assistant.io/integrations/logger/
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
 logger:
   default: info
   logs:
     custom_components.ollama_conversation: debug
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+input_boolean:
+  bedroom_light:
+  kitchen_light:
+  front_door:
+  garage_door:
+
+input_number:
+  kitchen_light:
+    min: 0
+    max: 255
+  bedroom_light:
+    min: 0
+    max: 255
+  garage_door:
+    min: 0
+    max: 100
+
+light:
+  - platform: template
+    lights:
+      kitchen_light:
+        friendly_name: "Kitchen Light"
+        unique_id: light.kitchen_light
+        level_template: "{{ states('input_number.kitchen_light')|int }}"
+        turn_on:
+          service: input_boolean.turn_on
+          entity_id: input_boolean.kitchen_light
+        turn_off:
+          service: input_boolean.turn_off
+          entity_id: input_boolean.kitchen_light
+        set_level:
+          service: input_number.set_value
+          data_template:
+            value: "{{ brightness }}"
+            entity_id: input_number.kitchen_light
+      bedroom_light:
+        friendly_name: "Bedroom Light"
+        unique_id: light.bedroom_light
+        turn_on:
+          service: input_boolean.turn_on
+          entity_id: input_boolean.bedroom_light
+        turn_off:
+          service: input_boolean.turn_off
+          entity_id: input_boolean.bedroom_light
+        set_level:
+          service: input_number.set_value
+          data_template:
+            value: "{{ brightness }}"
+            entity_id: input_number.bedroom_light
+cover:
+  - platform: template
+    covers:
+      garage_door:
+        device_class: garage
+        friendly_name: "Garage Door"
+        unique_id: cover.garage_door
+        value_template: "{{ states('input_boolean.garage_door')|bool }}"
+        position_template: "{{ states('input_number.garage_door')|int }}"
+        open_cover:
+          service: input_boolean.turn_on
+          entity_id: input_boolean.garage_door
+        close_cover:
+          service: input_boolean.turn_off
+          entity_id: input_boolean.garage_door
+        stop_cover:
+          service: input_boolean.toggle
+          entity_id: input_boolean.garage_door
+
+lock:
+  - platform: template
+    name: Front door
+    unique_id: lock.front_door
+    value_template: "{{ is_state('input_boolean.front_door', 'on') }}"
+    lock:
+      service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.front_door
+    unlock:
+      service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.front_door

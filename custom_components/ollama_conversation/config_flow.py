@@ -5,6 +5,7 @@ import types
 from types import MappingProxyType
 from typing import Any
 import voluptuous as vol
+from packaging import version
 
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
@@ -21,44 +22,12 @@ from homeassistant.helpers.selector import (
 )
 
 from .api import OllamaApiClient
-from .const import (
-    DOMAIN, LOGGER,
-    MENU_OPTIONS,
-
-    CONF_BASE_URL,
-    CONF_TIMEOUT,
-    CONF_MODEL,
-    CONF_CTX_SIZE,
-    CONF_MAX_TOKENS,
-    CONF_MIROSTAT_MODE,
-    CONF_MIROSTAT_ETA,
-    CONF_MIROSTAT_TAU,
-    CONF_TEMPERATURE,
-    CONF_REPEAT_PENALTY,
-    CONF_TOP_K,
-    CONF_TOP_P,
-    CONF_PROMPT_SYSTEM,
-
-    DEFAULT_BASE_URL,
-    DEFAULT_TIMEOUT,
-    DEFAULT_MODEL,
-    DEFAULT_CTX_SIZE,
-    DEFAULT_MAX_TOKENS,
-    DEFAULT_MIROSTAT_MODE,
-    DEFAULT_MIROSTAT_ETA,
-    DEFAULT_MIROSTAT_TAU,
-    DEFAULT_TEMPERATURE,
-    DEFAULT_REPEAT_PENALTY,
-    DEFAULT_TOP_K,
-    DEFAULT_TOP_P,
-    DEFAULT_PROMPT_SYSTEM
-)
+from .const import *
 from .exceptions import (
     ApiClientError,
     ApiCommError,
     ApiTimeoutError
 )
-
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
@@ -111,9 +80,11 @@ class OllamaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 timeout=user_input[CONF_TIMEOUT],
                 session=async_create_clientsession(self.hass),
             )
-            response = await self.client.async_get_heartbeat()
+            response = await self.client.async_get_version()
             if not response:
                 raise vol.Invalid("Invalid Ollama server")
+            if version.parse(response["version"]) < version.parse(OLLAMA_REQUIRED_VERSION):
+                raise vol.Invalid(f"Ollama server version needs to be {OLLAMA_REQUIRED_VERSION} or newer")
         except vol.Invalid:
             errors["base"] = "invalid_url"
         except ApiTimeoutError:
@@ -223,6 +194,21 @@ def ollama_schema_general_config(options: MappingProxyType[str, Any]) -> dict:
             description={"suggested_value": options.get(CONF_TIMEOUT, DEFAULT_TIMEOUT)},
             default=DEFAULT_TIMEOUT,
         ): int,
+        vol.Required(
+            CONF_INTENT_HANDLER,
+            description={
+                "suggested_value": options.get(CONF_INTENT_HANDLER, DEFAULT_INTENT_HANDLER)
+            },
+            default=DEFAULT_INTENT_HANDLER
+        ): SelectSelector(
+            SelectSelectorConfig(
+                options=[SelectOptionDict(value=v, label=l) for v, l in INTENT_HANDLER_OPTIONS.items()],
+                mode=SelectSelectorMode.DROPDOWN,
+                custom_value=False,
+                translation_key=CONF_INTENT_HANDLER,
+                sort=False
+            )
+        )
     }
 
 def ollama_schema_prompt_system(options: MappingProxyType[str, Any]) -> dict:
